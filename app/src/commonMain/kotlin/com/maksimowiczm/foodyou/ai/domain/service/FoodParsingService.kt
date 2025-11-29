@@ -63,8 +63,8 @@ internal class FoodParsingService(
           {
             "foodName": "string (name of the food item)",
             "quantity": "string (serving size, e.g., '2 slices', '1 cup')",
+            "itemCount": number (number of items, e.g., 2 for '2 slices', default 1),
             "weightGrams": number (estimated weight in grams),
-            "calories": number (total calories for this serving),
             "protein": number (protein in grams per 100g),
             "carbs": number (carbohydrates in grams per 100g),
             "fat": number (fat in grams per 100g),
@@ -74,7 +74,7 @@ internal class FoodParsingService(
         ]
         
         Important:
-        - Return nutrition values per 100g (except calories which is total for the serving)
+        - Return nutrition values per 100g
         - Provide reasonable estimates based on common nutrition data
         - If you cannot parse the description, return an empty array []
         - Return ONLY the JSON array, no markdown formatting or additional text
@@ -99,22 +99,24 @@ internal class FoodParsingService(
     private data class FoodItemResponse(
         val foodName: String,
         val quantity: String,
+        val itemCount: Int = 1,
         val weightGrams: Double,
-        val calories: Double,
         val protein: Double,
         val carbs: Double,
         val fat: Double,
         val fiber: Double = 0.0,
         val sugar: Double = 0.0,
     ) {
-        fun toParsedFoodEntry() =
-            ParsedFoodEntry(
+        fun toParsedFoodEntry(): ParsedFoodEntry {
+            val calculatedCalories = (protein * 4) + (carbs * 4) + (fat * 9)
+            return ParsedFoodEntry(
                 foodName = foodName,
                 quantity = quantity,
+                itemCount = itemCount,
                 weightGrams = weightGrams,
                 nutritionFacts =
                     NutritionFacts(
-                        energy = NutrientValue.from(calories),
+                        energy = NutrientValue.from(calculatedCalories),
                         proteins = NutrientValue.from(protein),
                         carbohydrates = NutrientValue.from(carbs),
                         fats = NutrientValue.from(fat),
@@ -122,6 +124,7 @@ internal class FoodParsingService(
                         sugars = NutrientValue.from(sugar),
                     ),
             )
+        }
     }
 }
 

@@ -15,4 +15,5 @@ data class ParsedFoodEntry(
     val quantity: String,
     val weightGrams: Double,
     val nutritionFacts: NutritionFacts,
+    val itemCount: Int? = null,
 )

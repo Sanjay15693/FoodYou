@@ -24,6 +24,13 @@ suspend fun createProductFromParsedFood(
     parsedEntry: ParsedFoodEntry,
     createProductUseCase: CreateProductUseCase,
 ): Result<Pair<FoodId.Product, Measurement>, CreateProductError> {
+    val servingWeight =
+        if (parsedEntry.itemCount != null && parsedEntry.itemCount > 0) {
+            parsedEntry.weightGrams / parsedEntry.itemCount
+        } else {
+            null
+        }
+
     val result = createProductUseCase.create(
         name = parsedEntry.foodName,
         brand = null,
@@ -31,7 +38,7 @@ suspend fun createProductFromParsedFood(
         note = "Created by AI Assistant from: \"${parsedEntry.quantity}\"",
         isLiquid = false,
         packageWeight = null,
-        servingWeight = null,
+        servingWeight = servingWeight,
         source = FoodSource(type = FoodSource.Type.User, url = null),
         nutritionFacts = parsedEntry.nutritionFacts,
         history = FoodHistory.Created(Instant.DISTANT_PAST),
