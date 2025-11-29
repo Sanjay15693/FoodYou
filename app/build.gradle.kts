@@ -147,6 +147,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqlite.android)
+            implementation("androidx.datastore:datastore-preferences:${libs.versions.datastorePreferences.get()}")
         }
 
         androidInstrumentedTest.dependencies {

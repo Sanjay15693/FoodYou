@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.app.ui.meal.MealSettingsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.settings.SettingsScreen
+import com.maksimowiczm.foodyou.app.ui.settings.ai.AiSettingsScreen
 import com.maksimowiczm.foodyou.app.ui.sponsor.SponsorScreen
 import com.maksimowiczm.foodyou.app.ui.theme.ThemeScreen
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
@@ -91,6 +92,7 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                 onGoals = { navController.navigateSingleTop(GoalsSetup) },
                 onPersonalization = { navController.navigateSingleTop(Personalization) },
                 onDatabase = { navController.navigateSingleTop(DatabaseSettings) },
+                onAiAssistant = { navController.navigateSingleTop(AiSettings) },
             )
         }
         forwardBackwardComposable<Language> {
@@ -359,6 +361,9 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                 onGoalsSettings = { navController.navigateSingleTop(GoalsSetup) },
             )
         }
+        forwardBackwardComposable<AiSettings> {
+            AiSettingsScreen(onBack = { navController.popBackStackInclusive<AiSettings>() })
+        }
     }
 }
 
@@ -463,3 +468,5 @@ private class FoodDiaryCreateEntry(
 @Serializable private object MealsPersonalization
 
 @Serializable private object GoalsPersonalization
+
+@Serializable private object AiSettings

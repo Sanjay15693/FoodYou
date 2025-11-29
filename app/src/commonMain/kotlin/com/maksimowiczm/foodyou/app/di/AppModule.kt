@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.di
 
+import com.maksimowiczm.foodyou.ai.aiModule
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouLogger
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouNetworkConfig
@@ -25,6 +26,7 @@ fun appModule(applicationCoroutineScope: CoroutineScope) = module {
     single { FoodYouLogger }.bind<Logger>()
     applicationCoroutineScope { applicationCoroutineScope }
 
+    aiModule()
     authModule()
     cryptoModule()
     csvModule()

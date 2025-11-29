@@ -291,6 +291,23 @@
     <string name="headline_personalization">Personalization</string>
     <string name="description_personalization">Customize your experience</string>
 
+    <string name="headline_ai_assistant">AI Assistant</string>
+    <string name="description_ai_assistant">AI-powered food tracking</string>
+    <string name="ai_settings_description">Configure your Google AI API key to enable AI-assisted food tracking. The AI can parse natural language descriptions of your meals and automatically populate nutrition data.</string>
+    <string name="label_gemini_api_key">Google AI API Key</string>
+    <string name="placeholder_gemini_api_key">Enter your API key</string>
+    <string name="supporting_gemini_api_key">Get your API key from Google AI Studio</string>
+    <string name="ai_settings_how_to_get_key">Visit https://aistudio.google.com/app/apikey to obtain a free API key. Keep your key secure and never share it publicly.</string>
+    <string name="show_api_key">Show API key</string>
+    <string name="hide_api_key">Hide API key</string>
+    <string name="ai_food_input_description">Describe what you ate in natural language, and AI will extract nutrition information.</string>
+    <string name="label_food_description">Food description</string>
+    <string name="placeholder_food_description">e.g., 2 slices of pepperoni pizza and a can of coke</string>
+    <string name="action_parse">Parse</string>
+    <string name="ai_parsing_food">Parsing your food description...</string>
+    <string name="ai_parsed_results">Tap a food item to add it to your diary</string>
+
+
     <string name="headline_nutrition_facts">Nutrition facts</string>
     <string name="description_personalize_nutrition_facts_short">Rearrange the nutritional information</string>
     <string name="action_reset_ordering">Reset ordering</string>

@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.food.diary.ai.AiFoodInputDialog
+import com.maksimowiczm.foodyou.app.ui.food.diary.ai.createProductFromParsedFood
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.common.compose.component.Scrim
 import com.maksimowiczm.foodyou.common.compose.extension.LaunchedCollectWithLifecycle
@@ -48,10 +50,15 @@ import com.maksimowiczm.foodyou.common.compose.extension.toDp
 import com.maksimowiczm.foodyou.common.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.usecase.CreateProductUseCase
+import com.maksimowiczm.foodyou.common.result.Result
+import com.maksimowiczm.foodyou.common.result.Ok
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -82,6 +89,45 @@ fun DiaryFoodSearchScreen(
 
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
     BackHandler(fabExpanded) { fabExpanded = false }
+
+    var showAiDialog by rememberSaveable { mutableStateOf(false) }
+    val createProductUseCase: CreateProductUseCase = koinInject()
+    val scope = rememberCoroutineScope()
+
+    if (showAiDialog) {
+        AiFoodInputDialog(
+            onDismiss = { showAiDialog = false },
+            onFoodSelected = { parsedEntry ->
+                scope.launch {
+                    when (val result = createProductFromParsedFood(parsedEntry, createProductUseCase)) {
+                        is Result.Success<*, *> -> {
+                            @Suppress("UNCHECKED_CAST")
+                            val pair = result.data as? Pair<*, *>
+                            if (pair != null) {
+                                val productId = pair.first as? FoodId.Product
+                                val measurement = pair.second as? Measurement
+                                if (productId != null && measurement != null) {
+                                    showAiDialog = false
+                                    onMeasure(productId, measurement)
+                                } else {
+                                    snackBarHostState.showSnackbar("Invalid product data format")
+                                }
+                            } else {
+                                snackBarHostState.showSnackbar("Invalid result format")
+                            }
+                        }
+                        is Result.Error<*, *> -> {
+                            val errorMessage = result.error?.toString() ?: "Unknown error"
+                            snackBarHostState.showSnackbar("Failed to create product: $errorMessage")
+                        }
+                        else -> {
+                            snackBarHostState.showSnackbar("Unexpected result type")
+                        }
+                    }
+                }
+            },
+        )
+    }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -136,6 +182,7 @@ fun DiaryFoodSearchScreen(
             onFabExpandedChange = { fabExpanded = it },
             onCreateRecipe = onCreateRecipe,
             onCreateProduct = onCreateProduct,
+            onAiAssistant = { showAiDialog = true },
             modifier =
                 Modifier.zIndex(100f)
                     .align(Alignment.BottomEnd)
