@@ -25,7 +25,7 @@ internal class GeminiApiClient(
 ) {
     companion object {
         private const val BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
-        private const val DEFAULT_MODEL = "gemini-1.5-flash"
+        private const val DEFAULT_MODEL = "gemini-2.5-flash-preview-09-2025"
         private const val API_KEY_HEADER = "x-goog-api-key"
         private const val TAG = "GeminiApiClient"
     }
