@@ -16,4 +16,5 @@ data class ParsedFoodEntry(
     val weightGrams: Double,
     val nutritionFacts: NutritionFacts,
     val itemCount: Int? = null,
+    val isLiquid: Boolean = false,
 )

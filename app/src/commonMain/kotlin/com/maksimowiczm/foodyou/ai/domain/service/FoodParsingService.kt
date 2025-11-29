@@ -64,8 +64,9 @@ internal class FoodParsingService(
             "foodName": "string (name of the food item)",
             "quantity": "string (serving size, e.g., '2 slices', '1 cup')",
             "itemCount": number (number of items, e.g., 2 for '2 slices', default 1),
-            "weightGrams": number (estimated weight in grams),
-            "protein": number (protein in grams per 100g),
+            "isLiquid": boolean (true if the food is a liquid like milk, juice, soda; false otherwise),
+            "weightGrams": number (estimated weight in grams for solids, or volume in ml for liquids),
+            "protein": number (protein in grams per 100g/ml),
             "carbs": number (carbohydrates in grams per 100g),
             "fat": number (fat in grams per 100g),
             "fiber": number (fiber in grams per 100g, can be 0 if unknown),
@@ -74,7 +75,7 @@ internal class FoodParsingService(
         ]
         
         Important:
-        - Return nutrition values per 100g
+        - Return nutrition values per 100g (or 100ml for liquids)
         - Provide reasonable estimates based on common nutrition data
         - If you cannot parse the description, return an empty array []
         - Return ONLY the JSON array, no markdown formatting or additional text
@@ -100,6 +101,7 @@ internal class FoodParsingService(
         val foodName: String,
         val quantity: String,
         val itemCount: Int = 1,
+        val isLiquid: Boolean = false,
         val weightGrams: Double,
         val protein: Double,
         val carbs: Double,
@@ -113,6 +115,7 @@ internal class FoodParsingService(
                 foodName = foodName,
                 quantity = quantity,
                 itemCount = itemCount,
+                isLiquid = isLiquid,
                 weightGrams = weightGrams,
                 nutritionFacts =
                     NutritionFacts(

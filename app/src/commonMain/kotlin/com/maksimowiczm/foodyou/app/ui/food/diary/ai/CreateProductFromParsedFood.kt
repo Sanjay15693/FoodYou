@@ -36,7 +36,7 @@ suspend fun createProductFromParsedFood(
         brand = null,
         barcode = null,
         note = "Created by AI Assistant from: \"${parsedEntry.quantity}\"",
-        isLiquid = false,
+        isLiquid = parsedEntry.isLiquid,
         packageWeight = null,
         servingWeight = servingWeight,
         source = FoodSource(type = FoodSource.Type.User, url = null),
@@ -46,7 +46,12 @@ suspend fun createProductFromParsedFood(
 
     return when (result) {
         is Result.Success -> {
-            val measurement = Measurement.Gram(parsedEntry.weightGrams)
+            val measurement =
+                if (parsedEntry.isLiquid) {
+                    Measurement.Milliliter(parsedEntry.weightGrams)
+                } else {
+                    Measurement.Gram(parsedEntry.weightGrams)
+                }
             Ok(Pair(result.data, measurement))
         }
         is Result.Error -> Err(result.error) // Extract the error from the result
