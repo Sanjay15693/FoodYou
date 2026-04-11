@@ -51,7 +51,7 @@ fun AiSettingsScreen(
     logger: Logger = koinInject(),
 ) {
     val viewModel = rememberAiSettingsViewModel(aiPreferencesRepository, geminiApiClient, logger)
-    val preferences by viewModel.aiPreferences.collectAsState()
+    val preferences by viewModel.aiPreferences.collectAsStateWithLifecycle()
     val availableModels by viewModel.availableModels.collectAsState()
     val isLoadingModels by viewModel.isLoadingModels.collectAsState()
     val modelsError by viewModel.modelsError.collectAsState()
@@ -199,7 +199,6 @@ private fun AiSettingsScreen(
                 ) {
                     OutlinedTextField(
                         value = selectedModel ?: stringResource(Res.string.model_default),
-                        onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(Res.string.label_gemini_model)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = modelDropdownExpanded) },
