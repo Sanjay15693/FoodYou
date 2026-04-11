@@ -52,9 +52,9 @@ fun AiSettingsScreen(
 ) {
     val viewModel = rememberAiSettingsViewModel(aiPreferencesRepository, geminiApiClient, logger)
     val preferences by viewModel.aiPreferences.collectAsStateWithLifecycle()
-    val availableModels by viewModel.availableModels.collectAsState()
-    val isLoadingModels by viewModel.isLoadingModels.collectAsState()
-    val modelsError by viewModel.modelsError.collectAsState()
+    val availableModels by viewModel.availableModels.collectAsStateWithLifecycle()
+    val isLoadingModels by viewModel.isLoadingModels.collectAsStateWithLifecycle()
+    val modelsError by viewModel.modelsError.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         if (!preferences.geminiApiKey.isNullOrBlank()) {
