@@ -73,3 +73,20 @@ internal data class GeminiErrorResponse(
         val status: String,
     )
 }
+
+@Serializable
+internal data class ListModelsResponse(
+    val models: List<ModelInfo> = emptyList(),
+    val nextPageToken: String? = null,
+)
+
+@Serializable
+internal data class ModelInfo(
+    val name: String,
+    val version: String,
+    val displayName: String? = null,
+    val description: String? = null,
+    val inputTokenLimit: Int? = null,
+    val outputTokenLimit: Int? = null,
+    val supportedGenerationMethods: List<String> = emptyList(),
+)
