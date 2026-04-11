@@ -7,7 +7,10 @@ import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferences
  *
  * @param geminiApiKey The Google AI (Gemini) API key for making requests to the Gemini API.
  */
-data class AiPreferences(val geminiApiKey: String?) : UserPreferences {
+data class AiPreferences(
+    val geminiApiKey: String?,
+    val geminiModel: String? = null,
+) : UserPreferences {
     val isGeminiEnabled: Boolean
         get() = !geminiApiKey.isNullOrBlank()
 }
