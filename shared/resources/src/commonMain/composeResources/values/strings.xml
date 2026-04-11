@@ -306,6 +306,12 @@
     <string name="action_parse">Parse</string>
     <string name="ai_parsing_food">Parsing your food description...</string>
     <string name="ai_parsed_results">Tap a food item to add it to your diary</string>
+    <string name="label_model_selection">Model Selection</string>
+    <string name="label_gemini_model">Gemini Model</string>
+    <string name="model_selection_requires_api_key">Enter an API key to see available models</string>
+    <string name="loading_models">Loading available models...</string>
+    <string name="retry">Retry</string>
+    <string name="model_default">Default</string>
 
 
     <string name="headline_nutrition_facts">Nutrition facts</string>
