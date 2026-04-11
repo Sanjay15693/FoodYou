@@ -31,7 +31,11 @@ internal class FoodParsingService(
      * @return List of parsed food entries.
      * @throws FoodParsingException if parsing fails.
      */
-    suspend fun parseFoodDescription(description: String, apiKey: String): List<ParsedFoodEntry> {
+    suspend fun parseFoodDescription(
+        description: String,
+        apiKey: String,
+        model: String? = null,
+    ): List<ParsedFoodEntry> {
         logger.d(TAG) { "Parsing food description: $description" }
 
         if (apiKey.isBlank()) {
@@ -41,7 +45,7 @@ internal class FoodParsingService(
         val prompt = buildPrompt(description)
 
         return try {
-            val response = geminiApiClient.generateContent(prompt, apiKey)
+            val response = geminiApiClient.generateContent(prompt, apiKey, model)
             parseResponse(response)
         } catch (e: GeminiApiException) {
             logger.e(TAG, e) { "Gemini API error: ${e.message}" }
