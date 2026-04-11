@@ -32,34 +32,77 @@ import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferencesRep
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedButton
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.ai.infrastructure.gemini.GeminiApiClient
+import com.maksimowiczm.foodyou.common.log.Logger
 
 @Composable
 fun AiSettingsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     aiPreferencesRepository: UserPreferencesRepository<AiPreferences> = koinInject(),
+    geminiApiClient: GeminiApiClient = koinInject(),
+    logger: Logger = koinInject(),
 ) {
-    val viewModel = rememberAiSettingsViewModel(aiPreferencesRepository)
+    val viewModel = rememberAiSettingsViewModel(aiPreferencesRepository, geminiApiClient, logger)
     val preferences by viewModel.aiPreferences.collectAsState()
+    val availableModels by viewModel.availableModels.collectAsState()
+    val isLoadingModels by viewModel.isLoadingModels.collectAsState()
+    val modelsError by viewModel.modelsError.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if (!preferences.geminiApiKey.isNullOrBlank()) {
+            viewModel.loadModels()
+        }
+    }
 
     AiSettingsScreen(
         onBack = onBack,
         apiKey = preferences.geminiApiKey ?: "",
         onApiKeyChange = viewModel::updateApiKey,
+        selectedModel = preferences.geminiModel,
+        availableModels = availableModels,
+        isLoadingModels = isLoadingModels,
+        modelsError = modelsError,
+        onModelChange = viewModel::updateModel,
+        onRetryLoadModels = viewModel::loadModels,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AiSettingsScreen(
     onBack: () -> Unit,
     apiKey: String,
     onApiKeyChange: (String) -> Unit,
+    selectedModel: String?,
+    availableModels: List<String>,
+    isLoadingModels: Boolean,
+    modelsError: String?,
+    onModelChange: (String) -> Unit,
+    onRetryLoadModels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var apiKeyVisible by remember { mutableStateOf(false) }
     var apiKeyInput by remember(apiKey) { mutableStateOf(apiKey) }
+    var modelDropdownExpanded by remember { mutableStateOf(false) }
+
+    val currentApiKey = apiKeyInput.ifBlank { apiKey }
+    val shouldLoadModels = currentApiKey.isNotBlank() && availableModels.isEmpty() && !isLoadingModels
+
+    LaunchedEffect(currentApiKey) {
+        if (shouldLoadModels) {
+            onRetryLoadModels()
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -120,6 +163,66 @@ private fun AiSettingsScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+
+            HorizontalDivider()
+
+            Text(
+                text = stringResource(Res.string.label_model_selection),
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            if (currentApiKey.isBlank()) {
+                Text(
+                    text = stringResource(Res.string.model_selection_requires_api_key),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else if (isLoadingModels) {
+                Text(
+                    text = stringResource(Res.string.loading_models),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else if (modelsError != null) {
+                Text(
+                    text = modelsError,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+                OutlinedButton(onClick = onRetryLoadModels) {
+                    Text(stringResource(Res.string.retry))
+                }
+            } else {
+                ExposedDropdownMenuBox(
+                    expanded = modelDropdownExpanded,
+                    onExpandedChange = { modelDropdownExpanded = it },
+                ) {
+                    OutlinedTextField(
+                        value = selectedModel ?: stringResource(Res.string.model_default),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(Res.string.label_gemini_model)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = modelDropdownExpanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = modelDropdownExpanded,
+                        onDismissRequest = { modelDropdownExpanded = false },
+                    ) {
+                        availableModels.forEach { model ->
+                            DropdownMenuItem(
+                                text = { Text(model) },
+                                onClick = {
+                                    onModelChange(model)
+                                    modelDropdownExpanded = false
+                                },
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
