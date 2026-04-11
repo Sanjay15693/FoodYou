@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.log.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -92,6 +93,41 @@ internal class GeminiApiClient(
         } catch (e: Exception) {
             logger.e(TAG, e) { "Failed to generate content: ${e.message}" }
             throw GeminiApiException("Failed to generate content: ${e.message}", null, e)
+        }
+    }
+
+    /**
+     * Lists available models from the Gemini API.
+     *
+     * @param apiKey The Google AI API key.
+     * @return List of available model names (with "models/" prefix).
+     * @throws GeminiApiException if the API request fails.
+     */
+    suspend fun listModels(apiKey: String): List<ModelInfo> {
+        logger.d(TAG) { "Listing available models" }
+
+        return try {
+            val response = httpClient.get(BASE_URL) {
+                header(API_KEY_HEADER, apiKey)
+            }
+
+            if (!response.status.isSuccess()) {
+                val errorBody = response.bodyAsText()
+                logger.e(TAG) { "Gemini API error listing models: $errorBody" }
+                throw GeminiApiException(
+                    "Failed to list models: ${response.status.value}",
+                    response.status.value
+                )
+            }
+
+            val listResponse = response.body<ListModelsResponse>()
+            logger.d(TAG) { "Found ${listResponse.models.size} available models" }
+            listResponse.models
+        } catch (e: GeminiApiException) {
+            throw e
+        } catch (e: Exception) {
+            logger.e(TAG, e) { "Failed to list models: ${e.message}" }
+            throw GeminiApiException("Failed to list models: ${e.message}", null, e)
         }
     }
 }
