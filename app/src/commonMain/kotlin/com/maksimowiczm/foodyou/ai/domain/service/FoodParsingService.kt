@@ -45,7 +45,7 @@ internal class FoodParsingService(
         val prompt = buildPrompt(description)
 
         return try {
-            val response = geminiApiClient.generateContent(prompt, apiKey, model)
+            val response = geminiApiClient.generateContent(prompt, apiKey, model ?: "gemini-2.0-flash")
             parseResponse(response)
         } catch (e: GeminiApiException) {
             logger.e(TAG, e) { "Gemini API error: ${e.message}" }

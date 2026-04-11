@@ -46,10 +46,10 @@ import com.maksimowiczm.foodyou.common.log.Logger
 fun AiSettingsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    aiPreferencesRepository: UserPreferencesRepository<AiPreferences> = koinInject(),
-    geminiApiClient: GeminiApiClient = koinInject(),
-    logger: Logger = koinInject(),
 ) {
+    val aiPreferencesRepository: UserPreferencesRepository<AiPreferences> = koinInject()
+    val geminiApiClient: GeminiApiClient = koinInject()
+    val logger: Logger = koinInject()
     val viewModel = rememberAiSettingsViewModel(aiPreferencesRepository, geminiApiClient, logger)
     val preferences by viewModel.aiPreferences.collectAsStateWithLifecycle()
     val availableModels by viewModel.availableModels.collectAsStateWithLifecycle()
@@ -199,9 +199,10 @@ private fun AiSettingsScreen(
                 ) {
                     OutlinedTextField(
                         value = selectedModel ?: stringResource(Res.string.model_default),
+                        onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(Res.string.label_gemini_model)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = modelDropdownExpanded) },
+                        trailingIcon = @Composable { ExposedDropdownMenuDefaults.TrailingIcon(expanded = modelDropdownExpanded) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(),
