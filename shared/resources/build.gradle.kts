@@ -11,20 +11,18 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+        androidResources.enable = true
     }
 
     val xcfName = "resourcesKit"
-
-    iosX64 { binaries.framework { baseName = xcfName } }
 
     iosArm64 { binaries.framework { baseName = xcfName } }
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(compose.runtime)
-        implementation(compose.components.resources)
+        implementation(libs.jetbrains.compose.runtime)
+        implementation(libs.jetbrains.compose.components.resources)
     }
 }
 

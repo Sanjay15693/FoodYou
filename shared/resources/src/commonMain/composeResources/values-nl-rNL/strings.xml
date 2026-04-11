@@ -136,6 +136,7 @@
     <string name="action_disable_camera_flash">Camera flits uitschakelen</string>
     <string name="action_prevent_screen_capture">Schermopname blokkeren</string>
     <string name="action_go_to_today">Ga naar vandaag</string>
+    <string name="action_feature_request_on_github">Verzoek een functie op GitHub</string>
     <string name="action_show_calendar">Open kalender</string>
     <string name="action_reorder">Rangschikken</string>
     <string name="action_move_up" description="reorder list item up">Omhoog verplaatsen</string>
@@ -152,6 +153,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Laat meer zien</string>
     <string name="action_download_product">Product downloaden</string>
     <string name="action_copy_and_open_bug_report">Kopieer en open bug rapport</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopieer &amp; rapport</string>
     <string name="action_show_details">Laat details zien</string>
     <string name="action_browse_usda">Doorzoek FoodData Central (USDA)</string>
     <string name="action_set_key">Stel sleutel in</string>
@@ -191,6 +193,7 @@
     <string name="error_unknown_error">Onbekende fout</string>
     <string name="error_measurement_error">Meet fout, controleer het portie- en verpakkingsgewicht</string>
     <string name="error_api_key_is_invalid">API sleutel is niet geldig</string>
+    <string name="error_not_a_barcode">Geen barcode</string>
     <string name="positive_goal_reached">Doel gehaald</string>
     <string name="positive_ok">Oké</string>
     <plurals name="negative_exceeded_by_calories">
@@ -216,6 +219,7 @@
     <string name="description_please_wait_while_exporting_products">Eén moment terwijl producten worden geëxporteerd</string>
     <string name="headline_launcher_icon_by_icons8">App icoon door Icons8</string>
     <string name="description_open_food_facts">Een samenwerkend, gratis en open database van voedselproducten van over de hele wereld</string>
+    <string name="error_open_food_facts_rate_limit">Open Food Facts API verzoeklimiet overschreden</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Producten aan het exporteren</string>
     <string name="notification_importing_products">Producten aan het importeren</string>
@@ -230,6 +234,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Uitpakken</string>
     <string name="headline_sponsor">Sponsor</string>
     <string name="description_sponsor_short_2">Ondersteun de groei van deze app</string>
+    <string name="headline_source_code">Bron code</string>
     <string name="action_write_an_email">Schrijf een e-mail</string>
     <string name="headline_contact">Contact</string>
     <string name="description_sponsor_contact">Als je vragen hebt over sponsoring, voel je vrij om contact met me op te nemen via e-mail of GitHub.</string>
@@ -267,7 +272,6 @@
     <string name="description_delete_ingredient">Ingrediënt zal worden verwijderd van het recept</string>
     <string name="neutral_remote_database_error">Kon product niet downloaden uit externe database. Je kan nog steeds al gedownloade producten bekijken.</string>
     <string name="headline_before_you_start">Voordat je begint</string>
-    <string name="description_before_you_start">Om jou een gratis en open-source voedingsdagboek aan te bieden, stellen we jouw privacy boven alles. Deze app verzamelt, bewaart of deelt geen persoonlijke informatie. Jouw gegevens worden lokaal op jouw apparaat opgeslagen en blijven volledig onder jouw controle.</string>
     <string name="action_agree_and_continue">Akkoord &amp; Doorgaan</string>
     <string name="headline_food_database">Voedingsdatabase</string>
     <string name="description_food_database">Je kan kiezen of je deze optionele externe diensten wil gebruiken, welke hun eigen voorwaarden en privacybeleid kunnen hebben</string>
@@ -311,7 +315,7 @@
     <string name="headline_auto_calculate_energy">Energie automatisch berekenen</string>
     <string name="headline_manual_energy_input">Handmatig energie invoeren</string>
     <string name="headline_quick_add">Snel toevoegen</string>
-    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën.</string>
+    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën weet.</string>
     <string name="action_open_poll">Open peiling</string>
     <string name="headline_colors">Kleuren</string>
     <string name="description_colors">Pas de kleuren in de app aan</string>
@@ -356,7 +360,6 @@
     <string name="description_random_theme">Iedere keer dat je de app start zal er een willekeurig thema worden toegepast</string>
     <string name="headline_terms_of_use">Algemene voorwaarden</string>
     <string name="onboarding_privacy_tip">Deze app is open-source en gemaakt voor jou. We respecteren jouw privacy, jouw informatie blijft privé</string>
-    <string name="onboarding_allow_food_you_services">Sta toe om te verbinden met Food You diensten</string>
     <string name="headline_add_profile">Profiel toevoegen</string>
     <string name="headline_how_do_you_want_to_be_called">Hoe wil je genoemd worden?</string>
     <string name="headline_profile_name">Profiel naam</string>
@@ -368,4 +371,24 @@
     <string name="action_switch_profile">Profiel wisselen</string>
     <string name="action_add_profile">Profiel toevoegen</string>
     <string name="action_refresh">Verversen</string>
+    <string name="description_not_sure_yet">Nog niet zeker? U kunt het op elk moment wijzigen</string>
+    <string name="question_discard_profile">Profiel verwijderen?</string>
+    <string name="headline_edit_profile">Profiel wijzigen</string>
+    <string name="action_delete_profile">Verwijder profiel</string>
+    <string name="headline_delete_profile">Verwijder profiel</string>
+    <string name="description_delete_profile">Dit profiel zal permanent worden verwijderd. Alle gegevens die eraan gekoppeld zijn, zullen voor altijd verloren gaan.</string>
+    <string name="action_today" description="Set date to today">Vandaag</string>
+    <string name="action_fill_in_details">Vul gegevens in</string>
+    <string name="action_skip_for_now">Voorlopig overslaan</string>
+    <string name="headline_add_more_details">Meer gegevens toevoegen</string>
+    <string name="description_add_more_details_product_form">Eiwitten, vetten, koolhydraten en energie waarden invullen helpt nauwkeurige voedingsinzichten te bieden</string>
+    <string name="headline_favorite">Favoriet</string>
+    <string name="action_add_a_photo">Een foto toevoegen</string>
+    <string name="action_remove_a_photo">Een foto verwijderen</string>
+    <string name="description_values_per">Selecteer de hoeveelheid waarop uw voedingswaarden gebaseerd zijn</string>
+    <string name="description_privacy">Beheer uw persoonlijke gegevens</string>
+    <string name="headline_database_backup">Database back-up</string>
+    <string name="description_replacing_database">Database vervangen, even geduld...</string>
+    <string name="headline_experimental">Experimenteel</string>
+    <string name="description_privacy_policy">Zie hoe uw gegevens worden verwerkt</string>
 </resources>

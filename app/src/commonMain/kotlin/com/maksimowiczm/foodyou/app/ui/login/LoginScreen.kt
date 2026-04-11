@@ -21,11 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Login
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.PrivacyTip
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,11 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.auth.Session
 import com.maksimowiczm.foodyou.common.auth.SessionRepository
 import com.maksimowiczm.foodyou.common.compose.extension.add
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -63,7 +60,7 @@ import org.koin.compose.koinInject
 @Composable
 fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifier = Modifier) {
     val sessionRepository: SessionRepository = koinInject()
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     val session by sessionRepository.observeSession().collectAsStateWithLifecycle(null)
@@ -103,8 +100,7 @@ fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifi
                 onLogin()
             }
         },
-        onTermsOfService = { uriHandler.openUri(appConfig.termsOfServiceUrl) },
-        onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUrl) },
+        onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUri) },
         modifier = modifier,
     )
 }
@@ -142,7 +138,6 @@ private fun LoginScreen(
     isError: Boolean,
     onBack: () -> Unit,
     onLogin: () -> Unit,
-    onTermsOfService: () -> Unit,
     onPrivacyPolicy: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -213,29 +208,8 @@ private fun LoginScreen(
             item {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     FlowRow(Modifier.padding(horizontal = 32.dp)) {
-                        AssistChip(
-                            onClick = onTermsOfService,
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                )
-                            },
-                            label = { Text(stringResource(Res.string.headline_terms_of_service)) },
-                        )
                         Spacer(Modifier.width(8.dp))
-                        AssistChip(
-                            onClick = onPrivacyPolicy,
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.PrivacyTip,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                )
-                            },
-                            label = { Text(stringResource(Res.string.headline_privacy_policy)) },
-                        )
+                        PrivacyPolicyChip(onPrivacyPolicy)
                     }
 
                     Spacer(Modifier.height(8.dp))

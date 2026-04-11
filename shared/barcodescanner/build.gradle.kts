@@ -19,20 +19,19 @@ kotlin {
 
     val xcfName = "barcodescannerKit"
 
-    iosX64 { binaries.framework { baseName = xcfName } }
-
     iosArm64 { binaries.framework { baseName = xcfName } }
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.compose.foundation)
             implementation(libs.jetbrains.compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.jetbrains.compose.material.icons.extended)
+            implementation(libs.jetbrains.compose.ui)
+            implementation(libs.jetbrains.compose.components.resources)
+
             implementation(projects.shared.resources)
         }
 

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Login
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -28,9 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
-import com.maksimowiczm.foodyou.common.config.AppConfig
+import com.maksimowiczm.foodyou.food.domain.repository.OpenFoodFactsCredentialsRepository
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -69,10 +75,23 @@ fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    termsOfUseUri: String = koinInject<AppConfig>().openFoodFactsTermsOfUseUri,
-    privacyPolicyUri: String = koinInject<AppConfig>().openFoodFactsPrivacyPolicyUri,
+    termsOfUseUri: String = LocalAppConfig.current.openFoodFactsTermsOfUseUri,
+    privacyPolicyUri: String = LocalAppConfig.current.openFoodFactsPrivacyPolicyUri,
 ) {
+    val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
+    val credentialsRepository: OpenFoodFactsCredentialsRepository = koinInject()
+
+    val hasCredentials by
+        remember { credentialsRepository.hasCredentials() }.collectAsStateWithLifecycle(false)
+
+    var showLoginDialog by rememberSaveable { mutableStateOf(false) }
+    if (showLoginDialog) {
+        OpenFoodFactsLoginDialog(
+            onDismissRequest = { showLoginDialog = false },
+            onSave = { showLoginDialog = false },
+        )
+    }
 
     PrivacyCard(
         title = {
@@ -111,6 +130,34 @@ fun OpenFoodFactsPrivacyCard(
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
+                AssistChip(
+                    onClick = {
+                        if (hasCredentials) scope.launch { credentialsRepository.clear() }
+                        else showLoginDialog = true
+                    },
+                    leadingIcon = {
+                        if (hasCredentials) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Logout,
+                                contentDescription = null,
+                                modifier = Modifier.size(AssistChipDefaults.IconSize),
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Login,
+                                contentDescription = null,
+                                modifier = Modifier.size(AssistChipDefaults.IconSize),
+                            )
+                        }
+                    },
+                    label = {
+                        if (hasCredentials) {
+                            Text(stringResource(Res.string.action_sign_out))
+                        } else {
+                            Text(stringResource(Res.string.action_sign_in))
+                        }
+                    },
+                )
             }
         }
     }
@@ -121,7 +168,7 @@ fun UsdaPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    privacyPolicyUri: String = koinInject<AppConfig>().foodDataCentralPrivacyPolicyUri,
+    privacyPolicyUri: String = LocalAppConfig.current.foodDataCentralPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
     var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }

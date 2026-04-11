@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,9 +26,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
@@ -75,7 +78,11 @@ internal fun ImportCsvProductsScreen(
         }
     }
 
-    BackHandler(enabled = fieldsMap.isNotEmpty(), onBack = { showDiscardDialog = true })
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = fieldsMap.isNotEmpty(),
+        onBackCompleted = { showDiscardDialog = true },
+    )
 
     if (showDiscardDialog) {
         DiscardDialog(onDiscard = onBack, onDismissRequest = { showDiscardDialog = false }) {
@@ -264,7 +271,7 @@ private fun ProductFieldSelector(
                     Icon(Icons.Outlined.ArrowDropDown, null)
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    header.forEach { columnName ->
+                    header.forEachIndexed { index, columnName ->
                         DropdownMenuItem(
                             text = { Text(columnName) },
                             onClick = {
@@ -272,6 +279,9 @@ private fun ProductFieldSelector(
                                 onFieldSelected(field, columnName)
                             },
                         )
+                        if (index != header.lastIndex) {
+                            HorizontalDivider()
+                        }
                     }
                 }
             }

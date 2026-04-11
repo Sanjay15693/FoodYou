@@ -12,6 +12,12 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_7,
+                v_3_4_5,
+                v_3_4_4,
+                v_3_4_3,
+                v_3_4_2,
+                v_3_4_1,
                 v_3_4_0,
                 v_3_3_5,
                 v_3_3_4,
@@ -45,6 +51,78 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_4_7 =
+        Version(
+            version = "3.4.7",
+            date = LocalDate(2026, 3, 26),
+            changes =
+                listOf(
+                    "Added Open Food Facts authentication to handle search API requiring authentication.",
+                    "Updated privacy policy regarding Open Food Facts credential handling."
+                ),
+        )
+
+    val v_3_4_5 =
+        Version(
+            version = "3.4.5",
+            date = LocalDate(2026, 3, 7),
+            changes =
+                listOf(
+                    "Limited sponsorship methods to Ko-fi, BTC, and XMR.",
+                    "Increased Open Food Facts request timeout.",
+                ),
+            bugFixes =
+                listOf(
+                    "Fixed an issue with setting the FoodData Central API key on the search screen (again).",
+                    "Added RFC-compliant CSV parser.",
+                ),
+            translations = listOf("Added Finnish."),
+        )
+
+    val v_3_4_4 =
+        Version(
+            version = "3.4.4",
+            date = LocalDate(2026, 2, 25),
+            bugFixes =
+                listOf(
+                    "Fixed an issue with setting the FoodData Central API key on the search screen.",
+                    "Fixed Open Food Facts 'nutriments' search error.",
+                ),
+        )
+
+    val v_3_4_3 =
+        Version(
+            version = "3.4.3",
+            date = LocalDate(2026, 2, 11),
+            bugFixes =
+                listOf(
+                    "Fixed Quick Add screen not respecting nutrient order settings.",
+                    "Fixed an issue where invalid foods could not be removed from recipes.",
+                    "Fixed importing files from network locations.",
+                ),
+            translations = listOf("Added Czech."),
+        )
+
+    val v_3_4_2 =
+        Version(
+            version = "3.4.2",
+            date = LocalDate(2026, 1, 15),
+            changes = listOf("Added a privacy policy. Food You now has its own website."),
+            bugFixes =
+                listOf(
+                    "Fixed a crash occurring when deleting a product package or serving weight."
+                ),
+            translations = listOf("Added Indonesian.", "Added Slovenian."),
+        )
+
+    val v_3_4_1 =
+        Version(
+            version = "3.4.1",
+            date = LocalDate(2025, 12, 28),
+            bugFixes =
+                listOf("Fixed a crash occurring while downloading from USDA FoodData Central."),
+        )
 
     val v_3_4_0 =
         Version(
@@ -283,7 +361,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 listOf("Fixed incorrect values displayed in the home screen meal card summary."),
             notes =
                 """
-                    This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+                This is a preview version. Please don't report missing features, as this is still a work-in-progress.
                 """
                     .trimIndent(),
             isPreview = true,
@@ -314,7 +392,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 ),
             notes =
                 """
-                    This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+                This is a preview version. Please don't report missing features, as this is still a work-in-progress.
                 """
                     .trimIndent(),
             isPreview = true,
@@ -526,7 +604,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
             translations = listOf("Updated Italian"),
             notes =
                 """
-                    This is a hotfix release that addresses some issues with the previous version.
+                This is a hotfix release that addresses some issues with the previous version.
                 """
                     .trimIndent(),
         )
@@ -601,8 +679,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 ),
             notes =
                 """
-                    Why was the Open Food Facts search removed?
-                    It was removed because it wasn't working as expected. The search often caused confusion among users, as it frequently returned inaccurate or irrelevant results. This led to my decision to remove the in-app search feature altogether and replace it with a manual entry option. This isn't a rant against Open Food Facts, as it's a great and free project. To be fair, the app used the deprecated V1 API, which seems inadequate for a modern app.
+                Why was the Open Food Facts search removed?
+                It was removed because it wasn't working as expected. The search often caused confusion among users, as it frequently returned inaccurate or irrelevant results. This led to my decision to remove the in-app search feature altogether and replace it with a manual entry option. This isn't a rant against Open Food Facts, as it's a great and free project. To be fair, the app used the deprecated V1 API, which seems inadequate for a modern app.
                 """
                     .trimIndent(),
         )
@@ -627,9 +705,9 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
             translations = listOf("Added Portuguese (Brazilian)", "Added Russian", "Added Arabic"),
             notes =
                 """
-                    This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
+                This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
 
-                    Possible other unintended changes. If you notice something odd happening, please report it
+                Possible other unintended changes. If you notice something odd happening, please report it
                 """
                     .trimIndent(),
         )

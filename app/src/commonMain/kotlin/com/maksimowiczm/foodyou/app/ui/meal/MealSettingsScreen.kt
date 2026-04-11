@@ -24,6 +24,7 @@ import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
@@ -92,7 +93,9 @@ private fun MealSettingsScreen(
     var isReordering by rememberSaveable { mutableStateOf(false) }
     var showForm by rememberSaveable { mutableStateOf(false) }
     val formFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(showForm) { runCatching { formFocusRequester.requestFocus() } }
+    LaunchedEffect(showForm) {
+        val _ = runCatching { formFocusRequester.requestFocus() }
+    }
 
     val lazyListState = rememberLazyListState()
     var mealsOrder by remember(meals) { mutableStateOf(meals) }
@@ -124,7 +127,10 @@ private fun MealSettingsScreen(
                         }
                     } else {
                         TooltipBox(
-                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+                            positionProvider =
+                                TooltipDefaults.rememberTooltipPositionProvider(
+                                    TooltipAnchorPosition.Above
+                                ),
                             tooltip = {
                                 PlainTooltip { Text(stringResource(Res.string.action_reorder)) }
                             },

@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.SponsorsNetworkDataSo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlinx.datetime.YearMonth
 
@@ -19,13 +20,18 @@ internal class GithubSponsorsApiClient(
         if (rateLimiter.canMakeRequest()) rateLimiter.recordRequest()
         else error("Rate limit exceeded")
 
-        val baseUrl = config.githubSponsorsRepositoryUrl
+        val baseUrl = API_URL
         val month = yearMonth.month.ordinal + 1
         val path = "${yearMonth.year}/$month.json"
         val url = "${baseUrl}/$path"
 
         val response = httpClient.get(url) { userAgent(config.userAgent) }
 
-        return response.body<List<NetworkSponsorship>>()
+        return if (response.status == HttpStatusCode.NotFound) listOf()
+        else response.body<List<NetworkSponsorship>>()
+    }
+
+    private companion object {
+        private const val API_URL = "https://sponsors.maksimowiczm.com"
     }
 }

@@ -45,15 +45,14 @@ import com.maksimowiczm.foodyou.app.ui.changelog.ChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.compose.component.StatusBarProtection
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     val scrollState = rememberScrollState()
@@ -116,9 +115,9 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.height(64.dp))
             AboutButtons(
-                onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUrl) },
+                onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUri) },
                 onChangelog = { showChangelog = true },
-                onIdea = { uriHandler.openUri(appConfig.issueTrackerUrl) },
+                onIdea = { uriHandler.openUri(appConfig.issueTrackerUri) },
                 onEmail = { uriHandler.openUri(appConfig.contactEmailUri) },
             )
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))

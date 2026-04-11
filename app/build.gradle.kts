@@ -21,49 +21,10 @@ buildConfig {
 
     val versionName = libs.versions.version.name.get()
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    val feedbackEmail = "maksimowicz.dev@gmail.com"
-    buildConfigField("String", "FEEDBACK_EMAIL", "\"$feedbackEmail\"")
-
-    val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
-    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
-
-    val githubUrl = "https://github.com/maksimowiczm/FoodYou"
-    val githubIssues = "$githubUrl/issues"
-    buildConfigField("String", "GITHUB_URL", "\"$githubUrl\"")
-    buildConfigField("String", "GITHUB_ISSUES_URL", "\"$githubIssues\"")
-
-    val crowdin = "https://crowdin.com/project/food-you"
-    buildConfigField("String", "CROWDIN_URL", "\"$crowdin\"")
-
-    val termsOfService = "TODO"
-    buildConfigField("String", "TERMS_OF_SERVICE_URL", "\"$termsOfService\"")
-    val privacyPolicy = "TODO"
-    buildConfigField("String", "PRIVACY_POLICY_URL", "\"$privacyPolicy\"")
-
-    // -- OPEN FOOD FACTS --
-    sourceSets.getByName("main") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")
-    }
-    sourceSets.getByName("test") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net\"")
-    }
-
-    // -- USDA --
-    buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
-
-    // -- Food You Sponsors github repository --
-    buildConfigField(
-        "String",
-        "GITHUB_SPONSORS_REPOSITORY_URL",
-        "\"https://maksimowiczm.github.io/FoodYou-sponsors\"",
-    )
 }
 
 kotlin {
     sourceSets.all {
-        languageSettings.enableLanguageFeature("WhenGuards")
         languageSettings.enableLanguageFeature("ExpectActualClasses")
         languageSettings.enableLanguageFeature("ContextParameters")
     }
@@ -72,8 +33,8 @@ kotlin {
         optIn.add("androidx.compose.ui.ExperimentalComposeUiApi")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
-        optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
+        freeCompilerArgs.add("-Xreturn-value-checker=check")
     }
 
     androidTarget {
@@ -83,7 +44,7 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "App"
             isStatic = true
@@ -95,16 +56,15 @@ kotlin {
             implementation(projects.shared.resources)
             implementation(projects.shared.barcodescanner)
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            // implementation(compose.material3)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.compose.foundation)
             implementation(libs.jetbrains.compose.material3)
-            implementation(libs.jetbrains.compose.backhandler)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.jetbrains.compose.material.icons.extended)
+            implementation(libs.jetbrains.compose.ui)
+            implementation(libs.jetbrains.compose.components.resources)
+            implementation(libs.jetbrains.compose.navigationevent.compose)
 
-            implementation(libs.navigation.compose)
+            implementation(libs.jetbrains.compose.navigation.compose)
 
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -211,16 +171,11 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
-    listOf(
-            "kspCommonMainMetadata",
-            "kspAndroid",
-            "kspIosX64",
-            "kspIosArm64",
-            "kspIosSimulatorArm64",
-        )
-        .forEach { add(it, libs.androidx.room.compiler) }
+    listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
+        add(it, libs.androidx.room.compiler)
+    }
 }
 
 compose.resources {

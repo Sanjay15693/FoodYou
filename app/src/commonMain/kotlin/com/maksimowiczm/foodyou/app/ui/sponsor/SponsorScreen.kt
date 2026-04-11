@@ -84,13 +84,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.compose.component.StatusBarProtection
 import com.maksimowiczm.foodyou.common.compose.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import com.maksimowiczm.foodyou.common.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.common.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.common.compose.utility.formatClipZeros
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import com.maksimowiczm.foodyou.common.extension.now
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.AvailableSponsorMethod
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.CryptoSponsorMethod
@@ -102,7 +102,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -436,18 +435,6 @@ private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifie
         trailingIcon = { Icon(imageVector = Icons.Outlined.Link, contentDescription = null) },
         onClick = onClick,
         modifier = modifier,
-        color =
-            if (primary) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surfaceContainer
-            },
-        contentColor =
-            if (primary) {
-                MaterialTheme.colorScheme.onPrimaryContainer
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            },
     )
 }
 
@@ -486,18 +473,6 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
                 clicked = true
                 onClick()
             },
-            color =
-                if (primary) {
-                    MaterialTheme.colorScheme.primaryContainer
-                } else {
-                    MaterialTheme.colorScheme.surfaceContainer
-                },
-            contentColor =
-                if (primary) {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                },
         )
     }
 }
@@ -509,8 +484,8 @@ private fun SponsorCard(
     trailingIcon: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ) {
     Surface(
         onClick = onClick,
@@ -537,7 +512,7 @@ private fun SponsorCard(
 
 @Composable
 private fun ContactCard(modifier: Modifier = Modifier) {
-    val appConfig = koinInject<AppConfig>()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     Card(
@@ -770,12 +745,12 @@ private fun Goal(
 ) {
     val color by
         animateColorAsState(
-            if (goal.fulfilled) MaterialTheme.colorScheme.primaryContainer
+            if (goal.fulfilled) MaterialTheme.colorScheme.secondaryContainer
             else MaterialTheme.colorScheme.surfaceContainer
         )
     val contentColor by
         animateColorAsState(
-            if (goal.fulfilled) MaterialTheme.colorScheme.onPrimaryContainer
+            if (goal.fulfilled) MaterialTheme.colorScheme.onSecondaryContainer
             else MaterialTheme.colorScheme.onSurface
         )
 
@@ -922,8 +897,8 @@ private fun SponsorMessageCard(
     Surface(
         modifier = modifier,
         shape = shape,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
             Row(

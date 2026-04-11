@@ -38,6 +38,8 @@ private val me = Author("Mateusz Maksimowicz", "https://github.com/maksimowiczm"
 // Someone who helped with the translation
 private val grizzleNL = Author("GrizzleNL", "https://grizzle.nl")
 private val mikropsoft = Author("mikropsoft", "https://github.com/mikropsoft")
+private val DarjanZlobec = Author("Darjan Zlobec", "https://www.rtm.si")
+private val Alexeido = Author("Alexeido", "https://github.com/Alexeido")
 
 private val EnglishUS =
     Translation(
@@ -51,7 +53,7 @@ private val languages =
     listOf(
         // If you'd like to be credited for your translations, please add your name here.
         // "language name (Country)" to Translation(
-        //     tag = "language-tag",
+        //     languageTag = "language-tag",
         //      listOf(
         //         Author(
         //             name = "Your Name",
@@ -62,15 +64,19 @@ private val languages =
         // ),
         EnglishUS,
         Translation("Català (Espanya)", "ca-ES"),
+        Translation("Čeština (Česko)", "cs-CZ"),
         Translation("Dansk (Danmark)", "da-DK"),
         Translation("Deutsch (Deutschland)", "de-DE"),
-        Translation("Español (España)", "es-ES"),
+        Translation("Español (España)", "es-ES", false, Alexeido),
         Translation("Français (France)", "fr-FR"),
+        Translation("Indonesian (Indonesia)", "id-ID"),
         Translation("Italiano (Italia)", "it-IT"),
         Translation("Magyar (Magyarország)", "hu-HU"),
         Translation("Nederlands (Nederland)", "nl-NL", false, grizzleNL),
         Translation("Polski (Polska)", "pl-PL", true, me),
         Translation("Português (Brasil)", "pt-BR"),
+        Translation("Slovenščina (Slovenija)", "sl-SI", false, DarjanZlobec),
+        Translation("Suomi (Suomi)", "fi-FI"),
         Translation("Türkçe (Türkiye)", "tr-TR", false, mikropsoft),
         Translation("Русский (Россия)", "ru-RU"),
         Translation("Українська (Україна)", "uk-UA"),

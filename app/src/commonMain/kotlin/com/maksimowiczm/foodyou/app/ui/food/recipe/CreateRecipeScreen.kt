@@ -4,8 +4,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.common.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
@@ -19,6 +21,7 @@ fun CreateRecipeScreen(
     onCreate: (FoodId.Recipe) -> Unit,
     onEditFood: (FoodId) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<CreateRecipeViewModel>()
@@ -43,7 +46,11 @@ fun CreateRecipeScreen(
             .value
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(enabled = formState.isModified, onBack = { showDiscardDialog = true })
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = formState.isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
     if (showDiscardDialog) {
         DiscardDialog(
             onDismissRequest = { showDiscardDialog = false },
@@ -67,6 +74,7 @@ fun CreateRecipeScreen(
         onSave = viewModel::create,
         onEditFood = onEditFood,
         onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+        onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_create_recipe),
         mainRecipeId = null,

@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -20,12 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.common.compose.component.unorderedList
+import com.maksimowiczm.foodyou.settings.domain.entity.NutrientsOrder
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun QuickAddForm(state: QuickAddFormState, modifier: Modifier = Modifier) {
+    val energyFormatter = LocalEnergyFormatter.current
+
     Column(modifier = modifier) {
         OutlinedTextField(
             state = state.name.textFieldState,
@@ -36,18 +42,26 @@ internal fun QuickAddForm(state: QuickAddFormState, modifier: Modifier = Modifie
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
 
-        state.proteins.TextField(
-            label = stringResource(Res.string.nutriment_proteins),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        state.carbohydrates.TextField(
-            label = stringResource(Res.string.nutriment_carbohydrates),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        state.fats.TextField(
-            label = stringResource(Res.string.nutriment_fats),
-            modifier = Modifier.fillMaxWidth(),
-        )
+        LocalNutrientsOrder.current.forEach {
+            when (it) {
+                NutrientsOrder.Proteins ->
+                    state.proteins.TextField(
+                        label = stringResource(Res.string.nutriment_proteins),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                NutrientsOrder.Fats ->
+                    state.fats.TextField(
+                        label = stringResource(Res.string.nutriment_fats),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                NutrientsOrder.Carbohydrates ->
+                    state.carbohydrates.TextField(
+                        label = stringResource(Res.string.nutriment_carbohydrates),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                else -> Unit
+            }
+        }
 
         OutlinedTextField(
             state = state.energy.textFieldState,
@@ -59,10 +73,13 @@ internal fun QuickAddForm(state: QuickAddFormState, modifier: Modifier = Modifie
                     Text(error.stringResource())
                 }
             },
-            suffix = { Text(stringResource(Res.string.unit_kcal)) },
+            suffix = { Text(energyFormatter.suffix()) },
             trailingIcon = {
                 TooltipBox(
-                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+                    positionProvider =
+                        TooltipDefaults.rememberTooltipPositionProvider(
+                            TooltipAnchorPosition.Above
+                        ),
                     tooltip = {
                         PlainTooltip {
                             Text(
@@ -102,19 +119,22 @@ internal fun QuickAddForm(state: QuickAddFormState, modifier: Modifier = Modifie
             text =
                 unorderedList(
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_proteins),
-                        4,
+                        energyFormatter.proteinsEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_carbohydrates),
-                        4,
+                        energyFormatter.carbohydratesEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_fats),
-                        9,
+                        energyFormatter.fatsEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                 ),
             style = MaterialTheme.typography.bodySmall,
