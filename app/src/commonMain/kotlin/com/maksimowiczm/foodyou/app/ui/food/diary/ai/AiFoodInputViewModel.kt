@@ -43,7 +43,11 @@ internal class AiFoodInputViewModel(
                     return@launch
                 }
 
-                val parsedEntries = foodParsingService.parseFoodDescription(description, preferences.geminiApiKey!!)
+                val parsedEntries = foodParsingService.parseFoodDescription(
+                    description,
+                    preferences.geminiApiKey!!,
+                    preferences.geminiModel,
+                )
 
                 if (parsedEntries.isEmpty()) {
                     _uiState.value =
